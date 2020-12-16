@@ -9,6 +9,7 @@ import (
 // Checker is a Rules checker.
 type Checker interface {
 	Check(path string) bool
+	IsTypeDetectionDisabled(path string) bool
 }
 
 // Rule is a allow/disallow rule.

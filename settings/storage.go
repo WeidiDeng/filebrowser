@@ -59,6 +59,10 @@ func (s *Storage) Save(set *Settings) error {
 		set.Rules = []rules.Rule{}
 	}
 
+	if set.DisableTypeDetections == nil {
+		set.DisableTypeDetections = []string{}
+	}
+
 	if set.Shell == nil {
 		set.Shell = []string{}
 	}

@@ -3,7 +3,9 @@ package http
 import (
 	"log"
 	"net/http"
+	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/tomasen/realip"
 
@@ -45,6 +47,18 @@ func (d *data) Check(path string) bool {
 	}
 
 	return allow
+}
+
+// IsTypeDetectionDisabled implements rules.Checker.
+func (d *data) IsTypeDetectionDisabled(path string) bool {
+	fullPath := d.user.FullPath(path)
+
+	for _, dtd := range d.settings.DisableTypeDetections {
+		if (filepath.IsAbs(dtd) && strings.HasPrefix(fullPath, dtd)) || (!filepath.IsAbs(dtd) && strings.HasPrefix(fullPath, filepath.Join(d.server.Root, dtd))) {
+			return true
+		}
+	}
+	return false
 }
 
 func handle(fn handleFunc, prefix string, store *storage.Storage, server *settings.Server) http.Handler {
